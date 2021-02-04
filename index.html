@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Temperature Hot</title>
+    <!-- Required meta tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <style>
+        body {
+            background: url(images/bg-image.jpg) no-repeat;
+            background-size: cover;
+            height: 100vh;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <form class="col-md-6 m-auto py-5">
+            <div class="input-group mb-3">
+                <input id="input-location" type="text" class="form-control" value="Brahmanbaria" placeholder="Enter a location for Weather ...">
+                <div class="input-group-append">
+                    <button onclick="displayTemp()" type="button" class="btn btn-danger">Search</button>
+                </div>
+            </div>
+        </form>
+        <div class="weather-status text-white text-center">
+            <img id="condition-icon" src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
+            <h1 id="display-location"></h1>
+            <h3><span id="display-temperature"></span>&deg; C</h3>
+            <h1 id="sky-condition" class="lead"></h1>
+        </div>
+    </div>
+
+    <script>
+        // For displaying location, temperature and weather-condition.
+        function displayTemp(){
+            const location = document.getElementById("input-location").value;
+            fetch('http://api.openweathermap.org/data/2.5/weather?q='+ location +'&appid=4f4e4d05a23edcadc12f17f4ae5346de')
+            .then(response => response.json())
+            .then(data => {
+                const temperature = data.main;
+                const inCelsius = temperature.temp - 273.15;
+                const sky = data.weather[0];
+                const skyCondition = sky.main;
+                const icon = sky.icon;
+                const iconUrl = "https://openweathermap.org/img/wn/"+ icon +"@2x.png";
+
+                document.getElementById("display-location").innerText = location;
+                document.getElementById("display-temperature").innerText = inCelsius.toFixed(0);
+                document.getElementById("sky-condition").innerText = skyCondition;
+                document.getElementById("condition-icon").src = iconUrl;
+            });
+        }
+        displayTemp();
+    </script>
+</body>
+
+</html>
